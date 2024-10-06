@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -euo pipefail
 
 command_exists() {
@@ -50,14 +49,24 @@ else
 fi
 
 if [[ ! -f temp_influenza_data/ncbi_dataset/data/GCA_042608115.1/GCA_042608115.1_ASM4260811v1_genomic.fna ]]; then
-    echo "Error: Required file not found after extraction."
+    echo "Error: Required genomic.fna file not found after extraction."
     echo "Please download the data manually from https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_042608115.1/"
     echo "and place the GCA_042608115.1_ASM4260811v1_genomic.fna file in the current directory."
     exit 1
 fi
 
-mv temp_influenza_data/ncbi_dataset/data/GCA_042608115.1/GCA_042608115.1_ASM4260811v1_genomic.fna .
+if [[ ! -f temp_influenza_data/ncbi_dataset/data/GCA_042608115.1/protein.faa ]]; then
+    echo "Warning: protein.faa file not found after extraction."
+    echo "The protein.faa file may not be included in the download or may have a different name."
+else
+    mv temp_influenza_data/ncbi_dataset/data/GCA_042608115.1/protein.faa .
+    echo "protein.faa file has been moved to the current directory."
+fi
 
+mv temp_influenza_data/ncbi_dataset/data/GCA_042608115.1/GCA_042608115.1_ASM4260811v1_genomic.fna .
 rm -rf temp_influenza_data influenza_a_data.zip
 
 echo "Process complete. GCA_042608115.1_ASM4260811v1_genomic.fna is now in the current directory."
+if [[ -f protein.faa ]]; then
+    echo "protein.faa is also in the current directory."
+fi
